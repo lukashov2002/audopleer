@@ -12,21 +12,17 @@ as it plays.
 #include "common.h"
 #include <string>
 
-FMOD_RESULT play(FMOD::System *system, FMOD::Sound *sound, FMOD::Channel *channel, const std::string &path) {
-	sound->release();
-	auto result = system->createSound(Common_MediaPath("whole_lotta_love"), FMOD_DEFAULT, 0, &sound);
-	result = sound->setMode(FMOD_LOOP_OFF);
-	return result;
-}
 
-FMOD_RESULT _play_sound_(FMOD::System *system, FMOD::Sound *sound, FMOD::Channel *channel) {
-	auto result = system->playSound(sound, 0, false, &channel);
-	return result;
+void _play_sound_(FMOD::System *&system, FMOD::Sound *&sound, FMOD::Channel *&channel, char *path) {
+	FMOD_RESULT result;
+	result = system->createSound(Common_MediaPath(path), FMOD_CREATESTREAM, 0, &sound);
+	ERRCHECK(result);
+	result = (sound)->setMode(FMOD_LOOP_OFF);
+	ERRCHECK(result);
 }
 
 int FMOD_Main() {
 	FMOD::System *system;
-	FMOD::Sound *sound1, *sound2, *sound3;
 	FMOD::ChannelControl *chanel_control = 0;
 	FMOD::Channel *channel = 0;
 	FMOD_RESULT result;
@@ -36,9 +32,6 @@ int FMOD_Main() {
 	result = FMOD::System_Create(&system);
 	result = system->getVersion(&version);
 	result = system->init(32, FMOD_INIT_NORMAL, extradriverdata);
-
-	result = system->createSound(Common_MediaPath("whole_lotta_love.mp3"), FMOD_DEFAULT, 0, &sound1);
-	result = sound1->setMode(FMOD_LOOP_OFF);
 	/* meow.mp3 has embedded loop points which automatically makes looping turn on, */
 	/* so turn it off here.  We could have also just put FMOD_LOOP_OFF in the above CreateSound call. */
 
@@ -50,6 +43,9 @@ int FMOD_Main() {
 		Main loop
 	*/
 	FMOD::Sound *sound;
+	result = system->createSound(Common_MediaPath("meow.mp3"), FMOD_CREATESTREAM, 0, &sound);
+	result = sound->setMode(FMOD_LOOP_OFF);
+	ERRCHECK(result);
 	int q = 0;
 	do {
 		Common_Update();
@@ -65,8 +61,9 @@ int FMOD_Main() {
 			if (q > 0) {
 				channel->stop();
 			}
-			result = system->createSound(Common_MediaPath("meow.mp3"), FMOD_CREATESTREAM, 0, &sound);
-			result = sound->setMode(FMOD_LOOP_OFF);
+			//result = system->createSound(Common_MediaPath("meow.mp3"), FMOD_CREATESTREAM, 0, &sound);
+			//result = sound->setMode(FMOD_LOOP_OFF);
+			_play_sound_(system, sound, channel, "meow.mp3");
 			result = system->playSound(sound, 0, false, &channel);
 			ERRCHECK(result);
 		}
@@ -76,8 +73,9 @@ int FMOD_Main() {
 			if (q > 0) {
 				channel->stop();
 			}
-			result = system->createSound(Common_MediaPath("whole_lotta_love.mp3"), FMOD_CREATESTREAM, 0, &sound);
-			result = sound->setMode(FMOD_LOOP_OFF);
+			_play_sound_(system, sound, channel, "whole_lotta_love.mp3");
+			//result = system->createSound(Common_MediaPath("whole_lotta_love.mp3"), FMOD_CREATESTREAM, 0, &sound);
+			//result = sound->setMode(FMOD_LOOP_OFF);
 			result = system->playSound(sound, 0, false, &channel);
 			ERRCHECK(result);
 		}
@@ -87,8 +85,9 @@ int FMOD_Main() {
 			if (q > 0) {
 				channel->stop();
 			}
-			result = system->createSound(Common_MediaPath("singing.wav"), FMOD_CREATESTREAM, 0, &sound);
-			result = sound->setMode(FMOD_LOOP_OFF);
+			_play_sound_(system, sound, channel, "singing.wav");
+			//result = system->createSound(Common_MediaPath("singing.wav"), FMOD_CREATESTREAM, 0, &sound);
+			//result = sound->setMode(FMOD_LOOP_OFF);
 			result = system->playSound(sound, 0, false, &channel);
 			ERRCHECK(result);
 		}
@@ -154,9 +153,7 @@ int FMOD_Main() {
 		Common_Sleep(50);
 	} while (!Common_BtnPress(BTN_QUIT));
 
-	result = sound1->release(); //shut down
-	result = sound2->release();
-	result = sound3->release();
+	result = sound->release(); //shut down
 	result = system->close();
 	result = system->release();
 	Common_Close();
