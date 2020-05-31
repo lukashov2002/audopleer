@@ -67,7 +67,6 @@ int FMOD_Main() {
             FMOD::Sound *sound;
             result = system->createSound(Common_MediaPath("meow.mp3"), FMOD_DEFAULT, 0, &sound);
             result = sound->setMode(FMOD_LOOP_OFF);
-            //_play_sound_(system, sound, channel);
             result = system->playSound(sound, 0, false, &channel);
             ERRCHECK(result);
         }
