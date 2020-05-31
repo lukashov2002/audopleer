@@ -1,0 +1,9 @@
+# ninja log v5
+0	795	612275588	CMakeFiles/sound.dir/main.cpp.obj	6f8d250218b9d880
+1	588	612275613	CMakeFiles/sound.dir/common_platform.cpp.obj	4fde2d7f7822529b
+1	405	612275669	CMakeFiles/sound.dir/common.cpp.obj	12f74751a66197f9
+1	1086	612283003	CMakeFiles/sound.dir/main.cpp.obj	6f8d250218b9d880
+1	274	612283018	sound.exe	b6af95cc5dcffaf3
+0	284	612288268	sound.exe	b6af95cc5dcffaf3
+1	2409	612292727	CMakeFiles/sound.dir/main.cpp.obj	6f8d250218b9d880
+2426	2608	612292728	sound.exe	b6af95cc5dcffaf3
